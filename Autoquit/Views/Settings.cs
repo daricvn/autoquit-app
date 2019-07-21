@@ -27,7 +27,7 @@ namespace Autoquit.Views
 
         private void Settings_Load(object sender, EventArgs e)
         {
-            ttGeneric.SetToolTip(chkNoInput, Language.Get("noinput_mode_tooltip"));
+            ttGeneric.SetToolTip(chkNoInput, Language.Get("msg_noinput_mode"));
             txtPlayScript.Text = SharedProperty.appSettings.PlayHotKey;
             txtStartRecording.Text = SharedProperty.appSettings.RecordHotKey;
             if (SharedProperty.appSettings.PlayModifier != null)
@@ -38,6 +38,7 @@ namespace Autoquit.Views
                 else cbModifiers.SelectedIndex = 0;
             }
             else cbModifiers.SelectedIndex = 0;
+            chkNoInput.Checked = !SharedProperty.appSettings.AllowInputMode;
             LoadListLanguage();
         }
 
@@ -72,6 +73,7 @@ namespace Autoquit.Views
         {
             SharedProperty.appSettings.PlayHotKey = txtPlayScript.Text;
             SharedProperty.appSettings.RecordHotKey = txtStartRecording.Text;
+            SharedProperty.appSettings.AllowInputMode=!chkNoInput.Checked;
             var modifierText = cbModifiers.SelectedItem?.ToString();
             if (modifierText!=null)
                 SharedProperty.appSettings.PlayModifier = modifierText.Trim();
@@ -84,6 +86,8 @@ namespace Autoquit.Views
             SharedProperty.ToggleHotkey(this.Invoker,true);
             SharedProperty.UpdateHotkeys();
             SharedProperty.ToggleHotkey(this.Invoker);
+            if (ScriptGrid.Column("SendInput") != null)
+                ScriptGrid.Column("SendInput").Visible = !chkNoInput.Checked;
             this.Close();
         }
     }

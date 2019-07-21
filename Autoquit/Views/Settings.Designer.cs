@@ -142,7 +142,6 @@
             this.chkNoInput.AutoSize = true;
             this.chkNoInput.Checked = true;
             this.chkNoInput.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkNoInput.Enabled = false;
             this.chkNoInput.Location = new System.Drawing.Point(16, 28);
             this.chkNoInput.Name = "chkNoInput";
             this.chkNoInput.Size = new System.Drawing.Size(104, 17);

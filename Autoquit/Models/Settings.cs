@@ -15,6 +15,8 @@ namespace Autoquit.Models
         public string PlayModifier { get; set; }
         public string RetrieveCoordKey { get; set; }
         public string RetrieveCoordModifier { get; set; }
+        public bool AllowInputMode { get; set; } = false;
+        public bool AllowMouseMove { get; set; } = false;
         public string Language { get; set; }
 
         public bool Save(string filePath)
@@ -52,6 +54,8 @@ namespace Autoquit.Models
                             this.RecordHotKey = temp.RecordHotKey;
                             this.RetrieveCoordKey = temp.RetrieveCoordKey;
                             this.RetrieveCoordModifier = temp.RetrieveCoordModifier;
+                            this.AllowInputMode = temp.AllowInputMode;
+                            this.AllowMouseMove = temp.AllowMouseMove;
                             this.Language = temp.Language ?? "en-us.json";
                             result = true;
                         }

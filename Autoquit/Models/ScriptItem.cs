@@ -13,5 +13,6 @@ namespace Autoquit.Models
         public string KeyName { get; set; }
         public long TimeOffset { get; set; }
         public bool Active { get; set; }
+        public bool SendInput { get; set; }
     }
 }

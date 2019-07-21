@@ -47,6 +47,7 @@ namespace Autoquit.Services
         }
         public static void RemoveAt(int index)
         {
+            if (index>=0)
             if (Rows != null && Rows.Count > index)
             {
                 if (Grid.InvokeRequired)
@@ -83,11 +84,20 @@ namespace Autoquit.Services
             {
                 cols.Width = 50;
             }
+            cols = Column("SendInput");
+            if (cols != null)
+            {
+                cols.HeaderText += "(?)";
+                cols.Width = 70;
+                cols.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                cols.ToolTipText = Language.Get("msg_sendinput");
+            }
             Grid.DataError += Grid_DataError;
             Grid.UserDeletingRow += Grid_UserDeletingRow;
             Grid.UserDeletedRow += Grid_UserDeletedRow;
             Grid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             Grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            Grid.ColumnHeaderMouseDoubleClick += Grid_ColumnHeaderMouseDoubleClick;
             typeof(DataGridView).InvokeMember(
                "DoubleBuffered",
                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
@@ -95,6 +105,20 @@ namespace Autoquit.Services
                Grid,
                new object[] { true });
             return true;
+        }
+
+        private static void Grid_ColumnHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (Grid.Columns.Count > e.ColumnIndex && Grid.Columns[e.ColumnIndex].Name=="SendInput")
+            {
+                if (Rows!=null && Rows.Count > 0)
+                {
+                    var check = !Rows[0].SendInput;
+                    foreach (var row in Rows)
+                        row.SendInput = check;
+                    Bind(currentScript);
+                }
+            }
         }
 
         private static void Grid_UserDeletedRow(object sender, DataGridViewRowEventArgs e)

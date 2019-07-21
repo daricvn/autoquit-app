@@ -90,6 +90,8 @@
   "keyname": "Phím/Tọa độ",
   "timeoffset": "Độ lệch (ms)",
   "active": "Kích hoạt",
+  "sendinput": "Ghi đè điều khiển",
+  "msg_sendinput": "Cho phép ghi đè điều khiển người dùng, dùng cho các trường hợp không hỗ trợ no-input. \nNhấp đôi chuột để chọn/bỏ chọn tất cả.\n\nLưu ý: Chỉ nên chạy một thời điểm khi dùng chế độ này.",
 
   "FormatException": "Giá trị nhập vào không phù hợp.",
 
@@ -97,12 +99,11 @@
   "script_name": "Tên kịch bản",
 
   "app_settings": "Thiết lập",
-  "noinput_mode": "Chế độ No-input",
+  "noinput_mode": "Chế độ chỉ No-input",
   "start_stop_record": "Bắt đầu/Dừng ghi kịch bản",
   "play_stop_script": "Phát/Dừng phát",
   "retrieve_coord": "Lấy tọa độ chuột",
   "language": "Ngôn ngữ",
-  "noinput_mode_tooltip": "Chế độ no-input cho phép chương trình thao tác lên cửa sổ kể cả khi nó đang chạy dưới nền."
-
+  "msg_noinput_mode": "Chế độ no-input cho phép chương trình thao tác lên cửa sổ kể cả \nkhi nó đang chạy dưới nền. \nTắt đi cho phép người dùng sử dụng chế độ Chiếm Điều khiển."
 
 }

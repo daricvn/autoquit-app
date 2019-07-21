@@ -24,7 +24,7 @@ namespace Autoquit.Services
         public static string Get(string key)
         {
             if (Text.ContainsKey(key))
-                return Text[key];
+                return Text[key].Replace("\\n",Environment.NewLine);
             else return "";
         }
 

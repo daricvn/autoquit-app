@@ -90,6 +90,8 @@
   "keyname": "Key/Coord",
   "timeoffset": "Offset",
   "active": "Active",
+  "sendinput": "Manipulate Input",
+  "msg_sendinput": "Allow manipulate user input for some application do not support no-input mode. \nDouble-click to check/uncheck all.\n\nWarning: Only use 1 instance while using this mode.",
 
   "FormatException": "This column does not support this format.",
 
@@ -97,12 +99,12 @@
   "script_name": "Script's Name",
 
   "app_settings": "App Settings",
-  "noinput_mode": "No-input mode",
+  "noinput_mode": "No-input mode only",
   "start_stop_record": "Start/Stop Recording",
   "play_stop_script": "Play/Stop",
   "retrieve_coord": "Retrieve Mouse Coordinate",
   "language": "Language",
-  "noinput_mode_tooltip": "No-input mode allow the automation happens without staying focus on the main window's process."
+  "msg_noinput_mode": "No-input mode allow the automation happens without staying focus on \nthe main window's process. \nDisable will allow user to use Manipulate Mode."
 
 
 }
