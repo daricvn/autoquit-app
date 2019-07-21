@@ -1,0 +1,8 @@
+.vs
+packages
+.vs/**
+packages/**
+**/bin
+**/obj
+**/bin/**
+**/obj/**
