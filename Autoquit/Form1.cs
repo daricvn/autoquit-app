@@ -478,15 +478,22 @@ namespace Autoquit
                 DropDownItem item = listProcess.SelectedItem as DropDownItem;
                 if (item != null)
                 {
-                    var p = Process.GetProcessById(Convert.ToInt32(item.Id));
-                    if (p.HasExited || p.MainWindowHandle == IntPtr.Zero)
+                    try
                     {
-                        return false;
+                        var p = Process.GetProcessById(Convert.ToInt32(item.Id));
+                        if (p.HasExited || p.MainWindowHandle == IntPtr.Zero)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            WinProcess.BringProcessToFront(p);
+                            return true;
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        WinProcess.BringProcessToFront(p);
-                        return true;
+                        ProcessExited();
                     }
                 }
             }
@@ -602,6 +609,18 @@ namespace Autoquit
             BtnScan_Click(null, null);
         }
 
+        private void ProcessExited(bool msg = false)
+        {
+            var selected = listProcess.SelectedItem;
+            listProcess.SelectedIndex = -1;
+            if (selected!=null)
+                listProcess.Items.Remove(selected);
+            cbWindows.Items.Clear();
+            cbWindows.Enabled = false;
+            if (msg)
+                MessageBox.Show(Language.Get("msg_process_exited"),
+                    Language.Get("info"));
+        }
         private void ListProcess_SelectedIndexChanged(object sender, EventArgs e)
         {
             cbWindows.Enabled = listProcess.SelectedItem != null;
@@ -611,7 +630,16 @@ namespace Autoquit
             var selected = (DropDownItem)listProcess.SelectedItem;
             if (selected != null)
             {
-                var process = Process.GetProcessById((int)selected.Id);
+                Process process;
+                try
+                {
+                    process = Process.GetProcessById((int)selected.Id);
+                }
+                catch (Exception ex)
+                {
+                    ProcessExited(true);
+                    return;
+                }
                 cbWindows.Items.Clear();
                 var mainWindow = selected.Clone(process.MainWindowHandle);
                 mainWindow.Value = "Main Window";
@@ -749,8 +777,8 @@ namespace Autoquit
                 speed = int.Parse((speedText.Substring(0, speedText.Length - 1)));
             TotalInterval += playTimer.Interval / 10;
             TimeOffset += ((playTimer.Interval / 10)*speed/100);
-            UpdateRemainingText();
             ProcessWinEvents();
+            UpdateRemainingText();
         }
 
         private void ProcessWinEvents()
@@ -912,7 +940,6 @@ namespace Autoquit
                             else
                             {
                                 remainingLoop = 0;
-                                UpdateRemainingText();
                                 BtnPlay_Click(null, null);
                             }
                         
