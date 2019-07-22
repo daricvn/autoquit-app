@@ -34,6 +34,7 @@ namespace Autoquit
         private InputSimulator _inputSender;
         private HashSet<WindowsInput.Native.VirtualKeyCode> keySet;
         private HashSet<MouseKey> mouseSet;
+        private Recording _recordForm;
 
         public Form1()
         {
@@ -86,6 +87,15 @@ namespace Autoquit
                 if (_inputSender == null)
                     _inputSender = new WindowsInput.InputSimulator();
                 return _inputSender;
+            }
+        }
+        private Recording RecordingIndicator
+        {
+            get
+            {
+                if (_recordForm == null)
+                    _recordForm = new Recording();
+                return _recordForm;
             }
         }
 
@@ -547,9 +557,13 @@ namespace Autoquit
                     btnRecord.Image = global::Autoquit.Properties.Resources.record;
                 if (!auto)
                     ScriptGrid.RemoveAt(ScriptGrid.GridCount - 1);
+                RecordingIndicator.Hide();
             }
             else
             {
+                RecordingIndicator.Show();
+                RecordingIndicator.Location = new Point(0, 0);
+                RecordingIndicator.FullWidth();
                 if (ScriptGrid.Rows.Count >= limitRecord)
                 {
                     MessageBox.Show(Language.Get("msg_limit_reached"), Language.Get("info"),
