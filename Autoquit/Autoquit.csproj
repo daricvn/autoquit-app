@@ -110,6 +110,7 @@
     <Compile Include="Models\Script.cs" />
     <Compile Include="Models\ScriptItem.cs" />
     <Compile Include="Models\Settings.cs" />
+    <Compile Include="Services\KeyMapper.cs" />
     <Compile Include="Services\Language.cs" />
     <Compile Include="Services\ScriptContent.cs" />
     <Compile Include="Services\ScriptGrid.cs" />
@@ -124,6 +125,18 @@
     </Compile>
     <Compile Include="Views\ChangeName.Designer.cs">
       <DependentUpon>ChangeName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChangePassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ChangePassword.Designer.cs">
+      <DependentUpon>ChangePassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PasswordLock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\PasswordLock.Designer.cs">
+      <DependentUpon>PasswordLock.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Recording.cs">
       <SubType>Form</SubType>
@@ -164,6 +177,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ChangeName.resx">
       <DependentUpon>ChangeName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ChangePassword.resx">
+      <DependentUpon>ChangePassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\PasswordLock.resx">
+      <DependentUpon>PasswordLock.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Recording.resx">
       <DependentUpon>Recording.cs</DependentUpon>
@@ -246,6 +265,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="resources\lock.png" />
     <None Include="resources\recording.png" />
     <None Include="resources\default.ico" />
   </ItemGroup>

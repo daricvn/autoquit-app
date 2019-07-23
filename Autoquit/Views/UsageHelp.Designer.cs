@@ -38,6 +38,7 @@
             // 
             this.helpGrid.AllowUserToAddRows = false;
             this.helpGrid.AllowUserToDeleteRows = false;
+            this.helpGrid.AllowUserToResizeColumns = false;
             this.helpGrid.AllowUserToResizeRows = false;
             this.helpGrid.BackgroundColor = System.Drawing.SystemColors.Control;
             this.helpGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -47,12 +48,13 @@
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ControlDarkDark;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.helpGrid.DefaultCellStyle = dataGridViewCellStyle1;
             this.helpGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.helpGrid.Location = new System.Drawing.Point(12, 12);
+            this.helpGrid.MultiSelect = false;
             this.helpGrid.Name = "helpGrid";
             this.helpGrid.ReadOnly = true;
             this.helpGrid.RowHeadersVisible = false;

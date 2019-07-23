@@ -27,7 +27,7 @@ namespace Autoquit
         private const string languageFolder = "resources";
         private const string defaultPath = "scripts";
         private const string defaultLanguage = "en-us.json";
-        private const int limitRecord = 300;
+        private const int limitRecord = 512;
         private decimal remainingLoop = -1;
         private int currentRndSpeed = 0;
         private bool firstTime = false;
@@ -38,6 +38,8 @@ namespace Autoquit
         private Recording _recordForm;
         private SystemKeyHold SysKey = new SystemKeyHold();
         private Random rnd = new Random();
+        private PasswordLock _locker;
+        private bool IsErrorDisplayed { get; set; }
 
         public Form1()
         {
@@ -99,6 +101,15 @@ namespace Autoquit
                 return _recordForm;
             }
         }
+        private PasswordLock Locker
+        {
+            get
+            {
+                if (_locker == null)
+                    _locker = new PasswordLock();
+                return _locker;
+            }
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -146,6 +157,7 @@ namespace Autoquit
             ttGeneric.SetToolTip(btnDown, Language.Get("movedown"));
             ttGeneric.SetToolTip(btnUndo, Language.Get("undo"));
             ttGeneric.SetToolTip(btnNew, Language.Get("new"));
+            ttGeneric.SetToolTip(btnLock, Language.Get("set_password"));
             ttGeneric.SetToolTip(chkDeepScan, Language.Get("msg_deepscan"));
         }
         private void SetEditControlEnable(bool enabled)
@@ -162,6 +174,7 @@ namespace Autoquit
             btnSaveAs.Enabled = enabled && (ScriptGrid.Rows != null && ScriptGrid.Rows.Count > 0);
             btnSave.Enabled = enabled && !string.IsNullOrEmpty(txtFilePath.Text);
             btnUndo.Enabled= enabled && !string.IsNullOrEmpty(txtFilePath.Text);
+            btnLock.Enabled = enabled && !string.IsNullOrEmpty(txtFilePath.Text);
         }
         private void UpdateRemainingText(bool renew=false)
         {
@@ -597,8 +610,10 @@ namespace Autoquit
                 RecordingIndicator.FullWidth();
                 if (ScriptGrid.Rows.Count >= limitRecord)
                 {
+                    IsErrorDisplayed = true;
                     MessageBox.Show(Language.Get("msg_limit_reached"), Language.Get("info"),
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    IsErrorDisplayed = false;
                     return;
                 }
                 if (btnRecord.InvokeRequired)
@@ -609,9 +624,11 @@ namespace Autoquit
                     btnRecord.Image = global::Autoquit.Properties.Resources.stop;
                 if (!BringProcessToFront())
                 {
+                    IsErrorDisplayed = true;
                     MessageBox.Show(Language.Get("msg_access_denied") ?? "Access denied.",
                         Language.Get("error") ?? "Error",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    IsErrorDisplayed = false;
                     return;
                 }
             }
@@ -709,11 +726,25 @@ namespace Autoquit
             if (ScriptGrid.Rows == null || ScriptGrid.Rows.Count == 0 ||
                 listProcess.SelectedItem == null)
             {
+                IsErrorDisplayed = true;
                 MessageBox.Show(Language.Get("msg_incompatible_script"), Language.Get("error"),
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                IsErrorDisplayed = false;
                 return;
             }
             if (recordTimer.Enabled) return;
+            if (!playTimer.Enabled && !string.IsNullOrEmpty(ScriptGrid.Script?.Password))
+            {
+                SharedProperty.ToggleHotkey(this, true);
+                Locker.ShowDialog();
+                SharedProperty.ToggleHotkey(this);
+                if (!Locker.Success)
+                {
+                    return;
+                }
+                Locker.Success = false;
+            }
             playTimer.Enabled = !playTimer.Enabled;
             if (playTimer.Enabled)
             {
@@ -932,14 +963,12 @@ namespace Autoquit
                         }
                     }
                     else failCount++;
-                    if ((eventType == "ENTER_TEXT"  || eventType == "RANDOM_TEXT") && !string.IsNullOrWhiteSpace(keyName))
+                    if ((eventType == "ENTER_TEXT" || eventType == "ENTER_SECRET" || eventType == "RANDOM_TEXT") && !string.IsNullOrWhiteSpace(keyName))
                     {
                         Keys key;
                         string keyList;
-                        string input;
-                        int shiftConversion = -1;
                         bool shouldShift = false;
-                        if (eventType == "ENTER_TEXT" || !keyName.Contains(";"))
+                        if (eventType == "ENTER_TEXT" || eventType == "ENTER_SECRET" || !keyName.Contains(";"))
                             keyList = keyName;
                         else
                         {
@@ -954,15 +983,8 @@ namespace Autoquit
                         }
                         foreach (char charKey in keyList)
                         {
-                            input = charKey.ToString().ToUpper();
-                            if (char.IsDigit(charKey))
-                                input = "D" + input;
-                            if (!char.IsLetterOrDigit(charKey) && (shiftConversion = Array.IndexOf(AppConstant.ShiftNumberConversion, charKey)) >= 0)
-                                input = "D" + shiftConversion;
-                            if (Enum.TryParse(input, out key) || charKey == ' ')
+                            if ((key=KeyMapper.Get(charKey, out shouldShift))!=Keys.None)
                             {
-                                if (charKey == ' ')
-                                    key = Keys.Space;
                                 failCount = 0;
                                 if (!manipulate)
                                 {
@@ -970,7 +992,6 @@ namespace Autoquit
                                 }
                                 else
                                 {
-                                    shouldShift = char.IsUpper(charKey) || shiftConversion >= 0;
                                     WindowsInput.Native.VirtualKeyCode vk = (WindowsInput.Native.VirtualKeyCode)Enum.ToObject(typeof(WindowsInput.Native.VirtualKeyCode), (int)key);
                                     if (shouldShift)
                                         InputSender.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LSHIFT);
@@ -1019,7 +1040,9 @@ namespace Autoquit
 
         private void BtnSaveAs_Click(object sender, EventArgs e)
         {
+            SharedProperty.ToggleHotkey(this, true);
             var result = saveDialog.ShowDialog();
+            SharedProperty.ToggleHotkey(this);
             if (result== DialogResult.OK)
             {
                 txtFilePath.Text = saveDialog.FileName;
@@ -1045,6 +1068,7 @@ namespace Autoquit
             btnChangeName.Enabled = !string.IsNullOrEmpty(txtFilePath.Text);
             btnSave.Enabled = !string.IsNullOrEmpty(txtFilePath.Text);
             btnUndo.Enabled = !string.IsNullOrEmpty(txtFilePath.Text);
+            btnLock.Enabled = !string.IsNullOrEmpty(txtFilePath.Text);
         }
 
         private void BtnUp_Click(object sender, EventArgs e)
@@ -1107,7 +1131,9 @@ namespace Autoquit
         {
             ChangeName form = new ChangeName();
             form.Invoker = this;
+            SharedProperty.ToggleHotkey(this, true);
             form.ShowDialog();
+            SharedProperty.ToggleHotkey(this);
         }
 
         private void BtnSettings_Click(object sender, EventArgs e)
@@ -1133,7 +1159,7 @@ namespace Autoquit
                 Keys key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);                  // The key of the hotkey that was pressed.
                 MouseHook.KeyModifier modifier = (MouseHook.KeyModifier)((int)m.LParam & 0xFFFF);       // The modifier of the hotkey that was pressed.
                 int id = m.WParam.ToInt32();                                        // The id of the hotkey that was pressed.
-                if (SharedProperty.IsHotkey(id,key,modifier) && !isSettingOpen)
+                if (SharedProperty.IsHotkey(id,key,modifier) && !isSettingOpen && !IsErrorDisplayed)
                 {
                     var hotkey = SharedProperty.FindHotkey(id);
                     if (hotkey.event_name == "PLAY")
@@ -1319,6 +1345,15 @@ namespace Autoquit
         {
             var helpLink = new UsageHelp();
             helpLink.ShowDialog();
+        }
+
+        private void BtnLock_Click(object sender, EventArgs e)
+        {
+            var form = new ChangePassword();
+            SharedProperty.ToggleHotkey(this, true);
+            form.ShowDialog();
+            SharedProperty.ToggleHotkey(this);
+            form.Dispose();
         }
     }
 }

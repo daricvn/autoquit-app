@@ -8,6 +8,7 @@ namespace Autoquit.Constant
 {
     static internal class AppConstant
     {
+        public const int MinPasswordLength = 4;
         public static string[] SupportedEvents = new string[] {
             "LEFT_CLICK",
             "RIGHT_CLICK",
@@ -19,6 +20,7 @@ namespace Autoquit.Constant
             "KEY_DOWN",
             "KEY_UP",
             "ENTER_TEXT",
+            "ENTER_SECRET",
             "RANDOM_TEXT",
             "DO_NOTHING"
         };

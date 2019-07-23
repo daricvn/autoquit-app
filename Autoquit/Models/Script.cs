@@ -10,6 +10,7 @@ namespace Autoquit.Models
     public class Script
     {
         public string Name { get; set; } = "";
+        public string Password { get; set; }
         public int LoopType { get; set; }
         public int? LoopCount { get; set; }
         public int? LoopTimeType { get; set; }

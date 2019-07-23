@@ -31,6 +31,7 @@ namespace Autoquit
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btnToFront = new System.Windows.Forms.Button();
             this.listScanCooldown = new System.Windows.Forms.Timer(this.components);
@@ -74,7 +75,7 @@ namespace Autoquit
             this.listProcess = new SimpleControl.SimpleSelectBox();
             this.ttGeneric = new System.Windows.Forms.ToolTip(this.components);
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.helpProvider = new System.Windows.Forms.HelpProvider();
+            this.btnLock = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.scriptGrid)).BeginInit();
             this.gbPlaybackOption.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtTimeCount)).BeginInit();
@@ -124,6 +125,8 @@ namespace Autoquit
             this.scriptGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.scriptGrid.Location = new System.Drawing.Point(12, 73);
             this.scriptGrid.Name = "scriptGrid";
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.scriptGrid.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.scriptGrid.Size = new System.Drawing.Size(441, 380);
             this.scriptGrid.TabIndex = 6;
             this.scriptGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ScriptGrid_CellContentClick);
@@ -382,7 +385,7 @@ namespace Autoquit
             this.btnNew.FlatAppearance.BorderSize = 0;
             this.btnNew.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnNew.Image = global::Autoquit.Properties.Resources._new;
-            this.btnNew.Location = new System.Drawing.Point(257, 459);
+            this.btnNew.Location = new System.Drawing.Point(219, 459);
             this.btnNew.Name = "btnNew";
             this.btnNew.Size = new System.Drawing.Size(34, 32);
             this.btnNew.TabIndex = 24;
@@ -429,7 +432,7 @@ namespace Autoquit
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.Image = global::Autoquit.Properties.Resources.done;
-            this.btnSave.Location = new System.Drawing.Point(297, 459);
+            this.btnSave.Location = new System.Drawing.Point(259, 459);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(34, 32);
             this.btnSave.TabIndex = 17;
@@ -443,7 +446,7 @@ namespace Autoquit
             this.btnUndo.FlatAppearance.BorderSize = 0;
             this.btnUndo.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUndo.Image = global::Autoquit.Properties.Resources.undo;
-            this.btnUndo.Location = new System.Drawing.Point(337, 459);
+            this.btnUndo.Location = new System.Drawing.Point(299, 459);
             this.btnUndo.Name = "btnUndo";
             this.btnUndo.Size = new System.Drawing.Size(34, 32);
             this.btnUndo.TabIndex = 16;
@@ -471,7 +474,7 @@ namespace Autoquit
             this.btnDown.FlatAppearance.BorderSize = 0;
             this.btnDown.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDown.Image = global::Autoquit.Properties.Resources.down;
-            this.btnDown.Location = new System.Drawing.Point(137, 459);
+            this.btnDown.Location = new System.Drawing.Point(120, 459);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(34, 32);
             this.btnDown.TabIndex = 12;
@@ -485,7 +488,7 @@ namespace Autoquit
             this.btnUp.FlatAppearance.BorderSize = 0;
             this.btnUp.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUp.Image = global::Autoquit.Properties.Resources.up;
-            this.btnUp.Location = new System.Drawing.Point(97, 459);
+            this.btnUp.Location = new System.Drawing.Point(80, 459);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(34, 32);
             this.btnUp.TabIndex = 11;
@@ -558,7 +561,7 @@ namespace Autoquit
             // 
             // ttGeneric
             // 
-            this.ttGeneric.AutoPopDelay = 10000;
+            this.ttGeneric.AutoPopDelay = 12000;
             this.ttGeneric.InitialDelay = 500;
             this.ttGeneric.ReshowDelay = 100;
             // 
@@ -573,11 +576,26 @@ namespace Autoquit
             this.linkLabel1.Text = "Help ?";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel1_LinkClicked);
             // 
+            // btnLock
+            // 
+            this.btnLock.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnLock.Enabled = false;
+            this.btnLock.FlatAppearance.BorderSize = 0;
+            this.btnLock.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLock.Image = global::Autoquit.Properties.Resources._lock;
+            this.btnLock.Location = new System.Drawing.Point(339, 459);
+            this.btnLock.Name = "btnLock";
+            this.btnLock.Size = new System.Drawing.Size(34, 32);
+            this.btnLock.TabIndex = 30;
+            this.btnLock.UseVisualStyleBackColor = false;
+            this.btnLock.Click += new System.EventHandler(this.BtnLock_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(792, 545);
+            this.Controls.Add(this.btnLock);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.cbWindows);
@@ -669,7 +687,7 @@ namespace Autoquit
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolTip ttGeneric;
         private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.HelpProvider helpProvider;
+        private System.Windows.Forms.Button btnLock;
     }
 }
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -95,6 +96,9 @@ namespace Autoquit.Services
             Grid.DataError += Grid_DataError;
             Grid.UserDeletingRow += Grid_UserDeletingRow;
             Grid.UserDeletedRow += Grid_UserDeletedRow;
+            Grid.CellFormatting += Grid_CellFormatting;
+            Grid.CellValueChanged += Grid_CellValueChanged;
+            Grid.EditingControlShowing += Grid_EditingControlShowing;
             Grid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             Grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             Grid.ColumnHeaderMouseDoubleClick += Grid_ColumnHeaderMouseDoubleClick;
@@ -106,6 +110,56 @@ namespace Autoquit.Services
                Grid,
                new object[] { true });
             return true;
+        }
+
+        private static void Grid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.ColumnIndex == 1)
+                {
+                    if (Grid.Rows[e.RowIndex]?.Cells[2].Tag != null && Grid.Rows[e.RowIndex].Cells[2].Value?.ToString() ==Grid.Rows[e.RowIndex].Cells[2].Tag?.ToString()
+                        )
+                    {
+                        Grid.Rows[e.RowIndex].Cells[2].Value = null;
+                        Grid.Rows[e.RowIndex].Cells[2].Tag = null;
+                    }
+                }
+            }
+            catch (Exception) { }
+        }
+
+        private static void Grid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (Grid.CurrentCell != null)
+            {
+                if (Grid.CurrentCell.ColumnIndex == 2)
+                {
+                    var rowIndex = (Grid.CurrentCell.RowIndex);
+                    var textBox = e.Control as TextBox;
+                    if (textBox != null)
+                    {
+                        if ("ENTER_SECRET".Equals(Grid.Rows[rowIndex].Cells[1].Value))
+                            textBox.PasswordChar = '\u25CF';
+                        else textBox.PasswordChar = '\0';
+                    }
+                }
+            }
+        }
+
+        private static void Grid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == 2)
+            {
+                if (Grid.Rows.Count>e.RowIndex)
+                {
+                    if ("ENTER_SECRET".Equals(Grid.Rows[e.RowIndex].Cells[1].Value) && e.Value!=null)
+                    {
+                        Grid.Rows[e.RowIndex].Cells[2].Tag = e.Value;
+                        e.Value = new String('\u25CF', e.Value.ToString().Length);
+                    }
+                }
+            }
         }
 
         private static void Grid_ColumnHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
