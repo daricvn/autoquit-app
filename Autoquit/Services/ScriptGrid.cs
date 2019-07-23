@@ -98,6 +98,7 @@ namespace Autoquit.Services
             Grid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             Grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             Grid.ColumnHeaderMouseDoubleClick += Grid_ColumnHeaderMouseDoubleClick;
+            Grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             typeof(DataGridView).InvokeMember(
                "DoubleBuffered",
                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,

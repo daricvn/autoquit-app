@@ -85,7 +85,7 @@ namespace Autoquit.Views
             SharedProperty.appSettings.Save(AppConstant.appSettings);
             SharedProperty.ToggleHotkey(this.Invoker,true);
             SharedProperty.UpdateHotkeys();
-            SharedProperty.ToggleHotkey(this.Invoker);
+            //SharedProperty.ToggleHotkey(this.Invoker);
             if (ScriptGrid.Column("SendInput") != null)
                 ScriptGrid.Column("SendInput").Visible = !chkNoInput.Checked;
             this.Close();

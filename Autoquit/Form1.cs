@@ -31,10 +31,13 @@ namespace Autoquit
         private decimal remainingLoop = -1;
         private int currentRndSpeed = 0;
         private bool firstTime = false;
+        private bool isSettingOpen = false;
         private InputSimulator _inputSender;
         private HashSet<WindowsInput.Native.VirtualKeyCode> keySet;
         private HashSet<MouseKey> mouseSet;
         private Recording _recordForm;
+        private SystemKeyHold SysKey = new SystemKeyHold();
+        private Random rnd = new Random();
 
         public Form1()
         {
@@ -68,8 +71,6 @@ namespace Autoquit
                 Application.Exit();
                 return;
             }
-            MouseHook.MouseHook.Start();
-            MouseHook.KeyboardHook.Start();
             InitializeComponent();
             Language.ApplyLanguage(this);
 
@@ -101,6 +102,8 @@ namespace Autoquit
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            MouseHook.MouseHook.Start();
+            MouseHook.KeyboardHook.Start();
             SetTooltip();
             MouseHook.MouseHook.MouseAction += MouseHook_MouseAction;
             MouseHook.KeyboardHook.KeyAction += KeyboardHook_KeyAction;
@@ -534,6 +537,34 @@ namespace Autoquit
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (playTimer.Enabled)
+            {
+                var result=MessageBox.Show(Language.Get("msg_script_isplaying"),
+                    Language.Get("confirmation"),
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+                if (result== DialogResult.No)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+            if (keySet != null && keySet.Count > 0)
+            {
+                foreach (var vk in keySet)
+                    InputSender.Keyboard.KeyUp(vk);
+                keySet.Clear();
+            }
+            // Fix permanent mouse down bug
+            if (mouseSet != null && mouseSet.Count > 0)
+            {
+                foreach (var mk in mouseSet)
+                    if (mk == MouseKey.LEFT_DOWN)
+                        InputSender.Mouse.LeftButtonUp();
+                    else if (mk == MouseKey.RIGHT_DOWN)
+                        InputSender.Mouse.RightButtonUp();
+                mouseSet.Clear();
+            }
             MouseHook.MouseHook.Stop();
             MouseHook.KeyboardHook.Stop();
         }
@@ -711,6 +742,7 @@ namespace Autoquit
                 }
             }
             scriptGrid.Enabled = !playTimer.Enabled;
+            listProcess.Enabled = !playTimer.Enabled;
             string tag = btnPlay.Tag.ToString();
             btnPlay.Tag = btnPlay.Text;
             btnPlay.Text = tag;
@@ -877,26 +909,18 @@ namespace Autoquit
                         if (Enum.TryParse(keyName, out key))
                         {
                             if (!manipulate)
+                            {
+                                if (SharedProperty.appSettings.AllowInputMode && !SysKey.IsSysKey(key))
+                                    SysKey.Down(InputSender);
                                 MouseHook.WinAPI.SendKeyboard(targetWindows, keyboardKey, key);
+                                if (SharedProperty.appSettings.AllowInputMode && !SysKey.IsSysKey(key))
+                                    SysKey.Release(InputSender);
+                                if (SharedProperty.appSettings.AllowInputMode && SysKey.IsSysKey(key) && keyboardKey == KeyType.KEY_UP)
+                                    SysKey.Switch(key, false);
+                            }
                             else
                             {
-                                WindowsInput.Native.VirtualKeyCode vk =(WindowsInput.Native.VirtualKeyCode) Enum.ToObject(typeof(WindowsInput.Native.VirtualKeyCode), (int)key);
-
-                                switch (keyboardKey)
-                                {
-                                    case KeyType.KEY_DOWN:
-                                        InputSender.Keyboard.KeyDown(vk);
-                                        keySet.Add(vk);
-                                        break;
-                                    case KeyType.KEY_UP:
-                                        InputSender.Keyboard.KeyUp(vk);
-                                        if (keySet.Contains(vk))
-                                            keySet.Remove(vk);
-                                        break;
-                                    default:
-                                        InputSender.Keyboard.KeyPress(vk);
-                                        break;
-                                }
+                                ManipulateKeyboard(keyboardKey, key);
                             }
                         }
                         else
@@ -908,24 +932,51 @@ namespace Autoquit
                         }
                     }
                     else failCount++;
-                    if (eventType == "ENTER_TEXT" && !string.IsNullOrWhiteSpace(keyName))
+                    if ((eventType == "ENTER_TEXT"  || eventType == "RANDOM_TEXT") && !string.IsNullOrWhiteSpace(keyName))
                     {
                         Keys key;
-                        string keyList = keyName.ToUpper();
+                        string keyList;
+                        string input;
+                        int shiftConversion = -1;
+                        bool shouldShift = false;
+                        if (eventType == "ENTER_TEXT" || !keyName.Contains(";"))
+                            keyList = keyName;
+                        else
+                        {
+                            var keyNames = keyName.Replace(";;",";").Split(';');
+                            var outLoop = 100;
+                            do
+                            {
+                                keyList = keyNames[rnd.Next(0, keyNames.Length - 1)];
+                                outLoop--;
+                            }
+                            while (string.IsNullOrEmpty(keyList) || keyNames.Length == 1 || outLoop<=0);
+                        }
                         foreach (char charKey in keyList)
                         {
-                            if (Enum.TryParse(charKey.ToString(), out key) || charKey==' ')
+                            input = charKey.ToString().ToUpper();
+                            if (char.IsDigit(charKey))
+                                input = "D" + input;
+                            if (!char.IsLetterOrDigit(charKey) && (shiftConversion = Array.IndexOf(AppConstant.ShiftNumberConversion, charKey)) >= 0)
+                                input = "D" + shiftConversion;
+                            if (Enum.TryParse(input, out key) || charKey == ' ')
                             {
                                 if (charKey == ' ')
                                     key = Keys.Space;
                                 failCount = 0;
                                 if (!manipulate)
+                                {
                                     MouseHook.WinAPI.SendKeyboard(targetWindows, KeyType.KEY_PRESS, key);
+                                }
                                 else
                                 {
-
+                                    shouldShift = char.IsUpper(charKey) || shiftConversion >= 0;
                                     WindowsInput.Native.VirtualKeyCode vk = (WindowsInput.Native.VirtualKeyCode)Enum.ToObject(typeof(WindowsInput.Native.VirtualKeyCode), (int)key);
+                                    if (shouldShift)
+                                        InputSender.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LSHIFT);
                                     InputSender.Keyboard.KeyPress(vk);
+                                    if (shouldShift)
+                                        InputSender.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LSHIFT);
                                 }
                             }
                         }
@@ -943,7 +994,7 @@ namespace Autoquit
                 {
                     ScriptGrid.SelectRow(0);
                     if ("Random...".Equals(cbPlaybackSpeed.SelectedItem))
-                        currentRndSpeed = (new Random().Next(2, 8)) * 25;
+                        currentRndSpeed = (rnd.Next(2, 8)) * 25;
                     TimeCount++;
                     if (rdLoopByTime.Checked && cbTimeType.SelectedItem != null)
                     {
@@ -1023,6 +1074,7 @@ namespace Autoquit
         private void BtnSave_Click(object sender, EventArgs e)
         {
             btnSave.Enabled = false;
+            ScriptGrid.UpdateIndex();
             Save(txtFilePath.Text);
             btnSave.Enabled = !string.IsNullOrEmpty(txtFilePath.Text);
             MessageBox.Show(Language.Get("msg_saved"), Language.Get("info"), MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1060,9 +1112,11 @@ namespace Autoquit
 
         private void BtnSettings_Click(object sender, EventArgs e)
         {
+            SharedProperty.ToggleHotkey(this, true);
             Views.Settings form = new Views.Settings();
             form.Invoker = this;
             form.ShowDialog();
+            SharedProperty.ToggleHotkey(this, false);
         }
         #region Hotkey Handler
         // Hot key handler
@@ -1079,7 +1133,7 @@ namespace Autoquit
                 Keys key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);                  // The key of the hotkey that was pressed.
                 MouseHook.KeyModifier modifier = (MouseHook.KeyModifier)((int)m.LParam & 0xFFFF);       // The modifier of the hotkey that was pressed.
                 int id = m.WParam.ToInt32();                                        // The id of the hotkey that was pressed.
-                if (SharedProperty.IsHotkey(id,key,modifier))
+                if (SharedProperty.IsHotkey(id,key,modifier) && !isSettingOpen)
                 {
                     var hotkey = SharedProperty.FindHotkey(id);
                     if (hotkey.event_name == "PLAY")
@@ -1092,6 +1146,42 @@ namespace Autoquit
             }
         }
 
+        internal WindowsInput.Native.VirtualKeyCode ToVirtualKey(Keys key)
+        {
+            return (WindowsInput.Native.VirtualKeyCode)Enum.ToObject(typeof(WindowsInput.Native.VirtualKeyCode), (int)key);
+        }
+
+        internal void ManipulateKeyboard(KeyType keyboardKey, Keys key)
+        {
+            WindowsInput.Native.VirtualKeyCode vk = ToVirtualKey(key);
+            if (InputSender!=null)
+                switch (keyboardKey)
+                {
+                    case KeyType.KEY_DOWN:
+                        if (!SysKey.Switch(key,true))
+                        {
+                            SysKey.Down(InputSender);
+                            InputSender.Keyboard.KeyDown(vk);
+                        }
+                        keySet.Add(vk);
+                        break;
+                    case KeyType.KEY_UP:
+                        if (!SysKey.IsSysKey(key))
+                        {
+                            SysKey.Release(InputSender);
+                            InputSender.Keyboard.KeyUp(vk);
+                        }
+                        else SysKey.Switch(key, false);
+                        if (keySet.Contains(vk))
+                            keySet.Remove(vk);
+                        break;
+                    default:
+                        SysKey.Down(InputSender);
+                        InputSender.Keyboard.KeyPress(vk);
+                        SysKey.Release(InputSender);
+                        break;
+                }
+        }
         internal void ManipulateMouse(IntPtr hWnd, MouseKey mouseKey, int x, int y)
         {
             Rect rct = new Rect();
@@ -1136,5 +1226,99 @@ namespace Autoquit
             }
         }
         #endregion
+
+
+        private class SystemKeyHold
+        {
+            public bool ShiftHold=false;
+            public bool LShiftHold = false;
+            public bool RShiftHold = false;
+            public bool LCtrlHold=false;
+            public bool RCtrlHold = false;
+            public bool RMenu = false;
+            public bool LMenu = false;
+            public bool IsSysKey(Keys key)
+            {
+                return key == Keys.Shift ||
+                    key == Keys.LControlKey || key == Keys.RControlKey ||
+                    key==Keys.LShiftKey || key==Keys.RShiftKey ||
+                    key==Keys.LMenu || key==Keys.RMenu
+                    ;
+            }
+            public bool Switch(Keys key, bool set)
+            {
+                switch (key)
+                {
+                    case Keys.Shift:
+                        ShiftHold = set;
+                        return true;
+                    case Keys.LShiftKey:
+                        LShiftHold = set;
+                        return true;
+                    case Keys.RShiftKey:
+                        RShiftHold = set;
+                        return true;
+                    case Keys.LControlKey:
+                        LCtrlHold = set;
+                        return true;
+                    case Keys.RControlKey:
+                        RCtrlHold = set;
+                        return true;
+                    case Keys.LMenu:
+                        LMenu = set;
+                        return true;
+                    case Keys.RMenu:
+                        RMenu = set;
+                        return true;
+                }
+                return false;
+            }
+            public void Down(IInputSimulator InputSender)
+            {
+                if (ShiftHold)
+                    InputSender.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.SHIFT);
+                else
+                if (LShiftHold)
+                    InputSender.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LSHIFT);
+                else
+                if (RShiftHold)
+                    InputSender.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.RSHIFT);
+                if (LCtrlHold)
+                    InputSender.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LCONTROL);
+                if (RCtrlHold)
+                    InputSender.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.RCONTROL);
+                if (LMenu)
+                    InputSender.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LMENU);
+                else
+                if (RMenu)
+                    InputSender.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.RMENU);
+            }
+            public void Release(IInputSimulator InputSender)
+            {
+                if (ShiftHold)
+                    InputSender.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.SHIFT);
+                else
+                if (LShiftHold)
+                    InputSender.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LSHIFT);
+                else
+                if (RShiftHold)
+                    InputSender.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.RSHIFT);
+                if (LCtrlHold)
+                    InputSender.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LCONTROL);
+                if (RCtrlHold)
+                    InputSender.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.RCONTROL);
+                if (LMenu)
+                    InputSender.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LMENU);
+                else
+                if (RMenu)
+                    InputSender.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.RMENU);
+            }
+        }
+
+        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var helpLink = new UsageHelp();
+            helpLink.ShowDialog();
+        }
     }
 }

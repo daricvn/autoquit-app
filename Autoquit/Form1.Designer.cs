@@ -70,9 +70,11 @@ namespace Autoquit
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnRecord = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.cbWindows = new SimpleSelectBox();
-            this.listProcess = new SimpleSelectBox();
+            this.cbWindows = new SimpleControl.SimpleSelectBox();
+            this.listProcess = new SimpleControl.SimpleSelectBox();
             this.ttGeneric = new System.Windows.Forms.ToolTip(this.components);
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.helpProvider = new System.Windows.Forms.HelpProvider();
             ((System.ComponentModel.ISupportInitialize)(this.scriptGrid)).BeginInit();
             this.gbPlaybackOption.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtTimeCount)).BeginInit();
@@ -86,7 +88,7 @@ namespace Autoquit
             this.btnToFront.Enabled = false;
             this.btnToFront.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnToFront.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnToFront.Location = new System.Drawing.Point(574, 12);
+            this.btnToFront.Location = new System.Drawing.Point(630, 12);
             this.btnToFront.Name = "btnToFront";
             this.btnToFront.Size = new System.Drawing.Size(146, 27);
             this.btnToFront.TabIndex = 2;
@@ -104,7 +106,7 @@ namespace Autoquit
             this.btnScan.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.btnScan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnScan.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnScan.Location = new System.Drawing.Point(424, 12);
+            this.btnScan.Location = new System.Drawing.Point(480, 12);
             this.btnScan.Name = "btnScan";
             this.btnScan.Size = new System.Drawing.Size(144, 27);
             this.btnScan.TabIndex = 5;
@@ -122,7 +124,7 @@ namespace Autoquit
             this.scriptGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.scriptGrid.Location = new System.Drawing.Point(12, 73);
             this.scriptGrid.Name = "scriptGrid";
-            this.scriptGrid.Size = new System.Drawing.Size(406, 380);
+            this.scriptGrid.Size = new System.Drawing.Size(441, 380);
             this.scriptGrid.TabIndex = 6;
             this.scriptGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ScriptGrid_CellContentClick);
             this.scriptGrid.SelectionChanged += new System.EventHandler(this.ScriptGrid_SelectionChanged);
@@ -132,7 +134,7 @@ namespace Autoquit
             this.btnExit.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExit.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExit.Location = new System.Drawing.Point(585, 477);
+            this.btnExit.Location = new System.Drawing.Point(641, 477);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(135, 32);
             this.btnExit.TabIndex = 9;
@@ -145,7 +147,7 @@ namespace Autoquit
             this.btnSettings.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSettings.Location = new System.Drawing.Point(585, 439);
+            this.btnSettings.Location = new System.Drawing.Point(641, 439);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(135, 32);
             this.btnSettings.TabIndex = 10;
@@ -158,13 +160,13 @@ namespace Autoquit
             this.txtFilePath.Location = new System.Drawing.Point(12, 503);
             this.txtFilePath.Name = "txtFilePath";
             this.txtFilePath.ReadOnly = true;
-            this.txtFilePath.Size = new System.Drawing.Size(284, 20);
+            this.txtFilePath.Size = new System.Drawing.Size(319, 20);
             this.txtFilePath.TabIndex = 13;
             this.txtFilePath.TextChanged += new System.EventHandler(this.TxtFilePath_TextChanged);
             // 
             // btnOpen
             // 
-            this.btnOpen.Location = new System.Drawing.Point(302, 501);
+            this.btnOpen.Location = new System.Drawing.Point(337, 501);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(116, 23);
             this.btnOpen.TabIndex = 14;
@@ -174,7 +176,7 @@ namespace Autoquit
             // 
             // chkDeepScan
             // 
-            this.chkDeepScan.Location = new System.Drawing.Point(424, 45);
+            this.chkDeepScan.Location = new System.Drawing.Point(480, 45);
             this.chkDeepScan.Name = "chkDeepScan";
             this.chkDeepScan.Size = new System.Drawing.Size(160, 26);
             this.chkDeepScan.TabIndex = 18;
@@ -186,7 +188,7 @@ namespace Autoquit
             // 
             this.scanProgress.Location = new System.Drawing.Point(-1, 536);
             this.scanProgress.Name = "scanProgress";
-            this.scanProgress.Size = new System.Drawing.Size(734, 10);
+            this.scanProgress.Size = new System.Drawing.Size(799, 10);
             this.scanProgress.TabIndex = 19;
             this.scanProgress.Visible = false;
             // 
@@ -209,7 +211,7 @@ namespace Autoquit
             this.gbPlaybackOption.Controls.Add(this.label3);
             this.gbPlaybackOption.Controls.Add(this.rdLoopByTime);
             this.gbPlaybackOption.Controls.Add(this.rdLoopUnlimited);
-            this.gbPlaybackOption.Location = new System.Drawing.Point(424, 133);
+            this.gbPlaybackOption.Location = new System.Drawing.Point(480, 133);
             this.gbPlaybackOption.Name = "gbPlaybackOption";
             this.gbPlaybackOption.Size = new System.Drawing.Size(296, 157);
             this.gbPlaybackOption.TabIndex = 21;
@@ -320,7 +322,7 @@ namespace Autoquit
             // 
             this.gbPlaybackInfo.Controls.Add(this.label1);
             this.gbPlaybackInfo.Controls.Add(this.txtTimeLeft);
-            this.gbPlaybackInfo.Location = new System.Drawing.Point(424, 296);
+            this.gbPlaybackInfo.Location = new System.Drawing.Point(480, 296);
             this.gbPlaybackInfo.Name = "gbPlaybackInfo";
             this.gbPlaybackInfo.Size = new System.Drawing.Size(296, 52);
             this.gbPlaybackInfo.TabIndex = 22;
@@ -354,9 +356,9 @@ namespace Autoquit
             // versionLabel
             // 
             this.versionLabel.ImageAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.versionLabel.Location = new System.Drawing.Point(574, 512);
+            this.versionLabel.Location = new System.Drawing.Point(546, 512);
             this.versionLabel.Name = "versionLabel";
-            this.versionLabel.Size = new System.Drawing.Size(159, 21);
+            this.versionLabel.Size = new System.Drawing.Size(230, 21);
             this.versionLabel.TabIndex = 26;
             this.versionLabel.Text = "version {0} - by Darick Nguyễn";
             this.versionLabel.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -380,7 +382,7 @@ namespace Autoquit
             this.btnNew.FlatAppearance.BorderSize = 0;
             this.btnNew.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnNew.Image = global::Autoquit.Properties.Resources._new;
-            this.btnNew.Location = new System.Drawing.Point(222, 459);
+            this.btnNew.Location = new System.Drawing.Point(257, 459);
             this.btnNew.Name = "btnNew";
             this.btnNew.Size = new System.Drawing.Size(34, 32);
             this.btnNew.TabIndex = 24;
@@ -394,7 +396,7 @@ namespace Autoquit
             this.btnChangeName.FlatAppearance.BorderSize = 0;
             this.btnChangeName.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnChangeName.Image = global::Autoquit.Properties.Resources.changename;
-            this.btnChangeName.Location = new System.Drawing.Point(344, 459);
+            this.btnChangeName.Location = new System.Drawing.Point(379, 459);
             this.btnChangeName.Name = "btnChangeName";
             this.btnChangeName.Size = new System.Drawing.Size(34, 32);
             this.btnChangeName.TabIndex = 23;
@@ -409,7 +411,7 @@ namespace Autoquit
             this.btnPlay.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPlay.Image = global::Autoquit.Properties.Resources.play;
             this.btnPlay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPlay.Location = new System.Drawing.Point(549, 363);
+            this.btnPlay.Location = new System.Drawing.Point(605, 363);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.btnPlay.Size = new System.Drawing.Size(171, 32);
@@ -427,7 +429,7 @@ namespace Autoquit
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.Image = global::Autoquit.Properties.Resources.done;
-            this.btnSave.Location = new System.Drawing.Point(262, 459);
+            this.btnSave.Location = new System.Drawing.Point(297, 459);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(34, 32);
             this.btnSave.TabIndex = 17;
@@ -441,7 +443,7 @@ namespace Autoquit
             this.btnUndo.FlatAppearance.BorderSize = 0;
             this.btnUndo.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUndo.Image = global::Autoquit.Properties.Resources.undo;
-            this.btnUndo.Location = new System.Drawing.Point(302, 459);
+            this.btnUndo.Location = new System.Drawing.Point(337, 459);
             this.btnUndo.Name = "btnUndo";
             this.btnUndo.Size = new System.Drawing.Size(34, 32);
             this.btnUndo.TabIndex = 16;
@@ -455,7 +457,7 @@ namespace Autoquit
             this.btnSaveAs.FlatAppearance.BorderSize = 0;
             this.btnSaveAs.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSaveAs.Image = global::Autoquit.Properties.Resources.saveas;
-            this.btnSaveAs.Location = new System.Drawing.Point(384, 459);
+            this.btnSaveAs.Location = new System.Drawing.Point(419, 459);
             this.btnSaveAs.Name = "btnSaveAs";
             this.btnSaveAs.Size = new System.Drawing.Size(34, 32);
             this.btnSaveAs.TabIndex = 15;
@@ -469,7 +471,7 @@ namespace Autoquit
             this.btnDown.FlatAppearance.BorderSize = 0;
             this.btnDown.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDown.Image = global::Autoquit.Properties.Resources.down;
-            this.btnDown.Location = new System.Drawing.Point(115, 459);
+            this.btnDown.Location = new System.Drawing.Point(137, 459);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(34, 32);
             this.btnDown.TabIndex = 12;
@@ -483,7 +485,7 @@ namespace Autoquit
             this.btnUp.FlatAppearance.BorderSize = 0;
             this.btnUp.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUp.Image = global::Autoquit.Properties.Resources.up;
-            this.btnUp.Location = new System.Drawing.Point(75, 459);
+            this.btnUp.Location = new System.Drawing.Point(97, 459);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(34, 32);
             this.btnUp.TabIndex = 11;
@@ -494,7 +496,7 @@ namespace Autoquit
             // 
             this.pictureBox1.BackgroundImage = global::Autoquit.Properties.Resources.icon;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Location = new System.Drawing.Point(641, 45);
+            this.pictureBox1.Location = new System.Drawing.Point(697, 45);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(79, 75);
             this.pictureBox1.TabIndex = 4;
@@ -509,7 +511,7 @@ namespace Autoquit
             this.btnRecord.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRecord.Image = ((System.Drawing.Image)(resources.GetObject("btnRecord.Image")));
             this.btnRecord.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRecord.Location = new System.Drawing.Point(549, 401);
+            this.btnRecord.Location = new System.Drawing.Point(605, 401);
             this.btnRecord.Name = "btnRecord";
             this.btnRecord.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.btnRecord.Size = new System.Drawing.Size(171, 32);
@@ -523,9 +525,9 @@ namespace Autoquit
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 41);
+            this.label2.Location = new System.Drawing.Point(61, 41);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(127, 26);
+            this.label2.Size = new System.Drawing.Size(113, 26);
             this.label2.TabIndex = 28;
             this.label2.Text = "@controls";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -537,7 +539,7 @@ namespace Autoquit
             this.cbWindows.Enabled = false;
             this.cbWindows.FormattingEnabled = true;
             this.cbWindows.ItemHeight = 20;
-            this.cbWindows.Location = new System.Drawing.Point(145, 41);
+            this.cbWindows.Location = new System.Drawing.Point(180, 41);
             this.cbWindows.Name = "cbWindows";
             this.cbWindows.Size = new System.Drawing.Size(273, 26);
             this.cbWindows.TabIndex = 27;
@@ -548,7 +550,7 @@ namespace Autoquit
             this.listProcess.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.listProcess.FormattingEnabled = true;
             this.listProcess.ItemHeight = 20;
-            this.listProcess.Location = new System.Drawing.Point(12, 12);
+            this.listProcess.Location = new System.Drawing.Point(47, 12);
             this.listProcess.Name = "listProcess";
             this.listProcess.Size = new System.Drawing.Size(406, 26);
             this.listProcess.TabIndex = 8;
@@ -560,11 +562,23 @@ namespace Autoquit
             this.ttGeneric.InitialDelay = 500;
             this.ttGeneric.ReshowDelay = 100;
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(12, 54);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(38, 13);
+            this.linkLabel1.TabIndex = 29;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Help ?";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel1_LinkClicked);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(732, 545);
+            this.ClientSize = new System.Drawing.Size(792, 545);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.cbWindows);
             this.Controls.Add(this.versionLabel);
@@ -654,6 +668,8 @@ namespace Autoquit
         private System.Windows.Forms.ComboBox cbPlaybackSpeed;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolTip ttGeneric;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.HelpProvider helpProvider;
     }
 }
 

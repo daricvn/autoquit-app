@@ -137,6 +137,12 @@
     <Compile Include="Views\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\UsageHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\UsageHelp.Designer.cs">
+      <DependentUpon>UsageHelp.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinProcess.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -164,6 +170,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\UsageHelp.resx">
+      <DependentUpon>UsageHelp.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />

@@ -19,6 +19,7 @@ namespace Autoquit.Constant
             "KEY_DOWN",
             "KEY_UP",
             "ENTER_TEXT",
+            "RANDOM_TEXT",
             "DO_NOTHING"
         };
         public static string[] SupportedCondition = new string[]
@@ -28,6 +29,7 @@ namespace Autoquit.Constant
             "BY_MINUTE",
             "BY_SECOND"
         };
+        public static char[] ShiftNumberConversion = new char[] { ')', '!', '@', '#', '$', '%', '^', '&', '*', '(' };
         public const string appSettings = "settings.json";
     }
 }
