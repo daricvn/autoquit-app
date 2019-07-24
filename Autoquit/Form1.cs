@@ -605,9 +605,6 @@ namespace Autoquit
             }
             else
             {
-                RecordingIndicator.Show();
-                RecordingIndicator.Location = new Point(0, 0);
-                RecordingIndicator.FullWidth();
                 if (ScriptGrid.Rows.Count >= limitRecord)
                 {
                     IsErrorDisplayed = true;
@@ -631,6 +628,9 @@ namespace Autoquit
                     IsErrorDisplayed = false;
                     return;
                 }
+                RecordingIndicator.Show();
+                RecordingIndicator.Location = new Point(0, 0);
+                RecordingIndicator.FullWidth();
             }
             if (this.InvokeRequired)
                 this.Invoke((MethodInvoker)(() => { recordTimer.Enabled = !recordTimer.Enabled; }));
@@ -792,7 +792,9 @@ namespace Autoquit
 
         private void BtnOpen_Click(object sender, EventArgs e)
         {
+            SharedProperty.ToggleHotkey(this, true);
             var result=fileBrowser.ShowDialog();
+            SharedProperty.ToggleHotkey(this);
             if (result==DialogResult.OK)
             {
                 txtFilePath.Text = fileBrowser.FileName;

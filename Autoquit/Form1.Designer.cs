@@ -31,7 +31,7 @@ namespace Autoquit
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btnToFront = new System.Windows.Forms.Button();
             this.listScanCooldown = new System.Windows.Forms.Timer(this.components);
@@ -125,8 +125,8 @@ namespace Autoquit
             this.scriptGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.scriptGrid.Location = new System.Drawing.Point(12, 73);
             this.scriptGrid.Name = "scriptGrid";
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.scriptGrid.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.scriptGrid.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.scriptGrid.Size = new System.Drawing.Size(441, 380);
             this.scriptGrid.TabIndex = 6;
             this.scriptGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ScriptGrid_CellContentClick);
