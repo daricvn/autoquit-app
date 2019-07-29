@@ -14,6 +14,9 @@ namespace Autoquit.Models
         public int LoopType { get; set; }
         public int? LoopCount { get; set; }
         public int? LoopTimeType { get; set; }
+        public double BoundX { get; set; }
+        public double BoundY { get; set; }
+        public string ResolutionApp { get; set; }
         public System.ComponentModel.BindingList<ScriptItem> Scripts { get; set; } = new BindingList<ScriptItem>();
     }
 }

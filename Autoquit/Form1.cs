@@ -36,9 +36,12 @@ namespace Autoquit
         private HashSet<WindowsInput.Native.VirtualKeyCode> keySet;
         private HashSet<MouseKey> mouseSet;
         private Recording _recordForm;
+        private MouseCoord _coordForm;
         private SystemKeyHold SysKey = new SystemKeyHold();
         private Random rnd = new Random();
         private PasswordLock _locker;
+        private double xRatio;
+        private double yRatio;
         private bool IsErrorDisplayed { get; set; }
 
         public Form1()
@@ -99,6 +102,15 @@ namespace Autoquit
                 if (_recordForm == null)
                     _recordForm = new Recording();
                 return _recordForm;
+            }
+        }
+        private MouseCoord MouseCoordIndicator
+        {
+            get
+            {
+                if (_coordForm == null)
+                    _coordForm = new MouseCoord();
+                return _coordForm;
             }
         }
         private PasswordLock Locker
@@ -175,6 +187,7 @@ namespace Autoquit
             btnSave.Enabled = enabled && !string.IsNullOrEmpty(txtFilePath.Text);
             btnUndo.Enabled= enabled && !string.IsNullOrEmpty(txtFilePath.Text);
             btnLock.Enabled = enabled && !string.IsNullOrEmpty(txtFilePath.Text);
+            chkResolution.Enabled = enabled && ScriptGrid.Script.BoundX >10 && ScriptGrid.Script.BoundY >10;
         }
         private void UpdateRemainingText(bool renew=false)
         {
@@ -261,6 +274,7 @@ namespace Autoquit
         {
             if (ScriptGrid.Script!=null)
             {
+                chkResolution.Enabled = ScriptGrid.Script.BoundX > 10 && ScriptGrid.Script.BoundY > 10;
                 if (!string.IsNullOrWhiteSpace(ScriptGrid.Script.Name))
                     this.Text = string.Format("{0} - {1}", Program.AppName, ScriptGrid.Script.Name);
                 else this.Text = Program.AppName;
@@ -478,11 +492,11 @@ namespace Autoquit
                         this.Invoke((MethodInvoker)(() =>
                         {
                             AppendList(Enum.GetName(arg.Key.GetType(), arg.Key),
-                                WinAPI.RetrieveCoord(process.MainWindowHandle, Cursor.Position.X, Cursor.Position.Y));
+                                WinAPI.RetrieveCoord(process.MainWindowHandle));
                         }));
                     else
                         AppendList(Enum.GetName(arg.Key.GetType(), arg.Key),
-                            WinAPI.RetrieveCoord(process.MainWindowHandle, Cursor.Position.X, Cursor.Position.Y));
+                            WinAPI.RetrieveCoord(process.MainWindowHandle));
                 }
                 catch (Exception e) { }
             }
@@ -655,6 +669,22 @@ namespace Autoquit
                 btnRecord.Tag = btnRecord.Text;
                 btnRecord.Text = tag;
             }
+            try
+            {
+                var selected = (DropDownItem)listProcess.SelectedItem;
+                var process = Process.GetProcessById((int)((DropDownItem)listProcess.SelectedItem).Id);
+                Rect rct = new Rect();
+                WinAPI.GetWindowRect(process.MainWindowHandle, ref rct);
+                ScriptGrid.Script.BoundX = Math.Abs(rct.Right - rct.Left);
+                ScriptGrid.Script.BoundY = Math.Abs(rct.Bottom - rct.Top);
+                ScriptGrid.Script.ResolutionApp = WinProcess.GetWindowName(process.MainWindowHandle);
+
+                chkResolution.Enabled = ScriptGrid.Script.BoundX > 10 && ScriptGrid.Script.BoundY > 10;
+            }
+            catch (Exception)
+            {
+
+            }
         }
         private void BtnRecord_Click(object sender, EventArgs e)
         {
@@ -680,8 +710,12 @@ namespace Autoquit
             cbWindows.Items.Clear();
             cbWindows.Enabled = false;
             if (msg)
+            {
+                IsErrorDisplayed = true;
                 MessageBox.Show(Language.Get("msg_process_exited"),
                     Language.Get("info"));
+                IsErrorDisplayed = false;
+            }
         }
         private void ListProcess_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -734,16 +768,59 @@ namespace Autoquit
                 return;
             }
             if (recordTimer.Enabled) return;
-            if (!playTimer.Enabled && !string.IsNullOrEmpty(ScriptGrid.Script?.Password))
+            if (!playTimer.Enabled)
             {
-                SharedProperty.ToggleHotkey(this, true);
-                Locker.ShowDialog();
-                SharedProperty.ToggleHotkey(this);
-                if (!Locker.Success)
+                if (!string.IsNullOrEmpty(ScriptGrid.Script?.Password))
                 {
-                    return;
+                    SharedProperty.ToggleHotkey(this, true);
+                    Locker.ShowDialog();
+                    SharedProperty.ToggleHotkey(this);
+                    if (!Locker.Success)
+                    {
+                        return;
+                    }
+                    Locker.Success = false;
                 }
-                Locker.Success = false;
+
+                if (chkResolution.Checked)
+                {
+                    try
+                    {
+                        var selected = (DropDownItem)listProcess.SelectedItem;
+                        var process = Process.GetProcessById((int)((DropDownItem)listProcess.SelectedItem).Id);
+                        if (!string.IsNullOrEmpty(ScriptGrid.Script.ResolutionApp) &&
+                            ScriptGrid.Script.ResolutionApp.ToLower().Equals(WinProcess.GetWindowName(process.MainWindowHandle).ToLower()))
+                        {
+                            Rect rct = new Rect();
+                            WinAPI.GetWindowRect(process.MainWindowHandle, ref rct);
+                            var width = Math.Abs(rct.Right - rct.Left);
+                            var height = Math.Abs(rct.Bottom - rct.Top);
+                            if (ScriptGrid.Script.BoundX > 10 && ScriptGrid.Script.BoundY > 10)
+                            {
+                                xRatio = width / ScriptGrid.Script.BoundX;
+                                yRatio = height / ScriptGrid.Script.BoundY;
+                            }
+                            else
+                            {
+                                xRatio = 1;
+                                yRatio = 1;
+                            }
+                        }
+                        else
+                        {
+                            var result = MessageBox.Show(Language.Get("msg_incompatible_app"),
+                                Language.Get("confirmation"),
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Hand);
+                            if (result == DialogResult.Yes)
+                                chkResolution.Checked = false;
+                            else return;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
             }
             playTimer.Enabled = !playTimer.Enabled;
             if (playTimer.Enabled)
@@ -910,6 +987,12 @@ namespace Autoquit
                             int x, y;
                             if (int.TryParse(coord[0], out x) && int.TryParse(coord[1], out y))
                             {
+                                if (chkResolution.Checked && ScriptGrid.Script.BoundX>10 && ScriptGrid.Script.BoundY>10
+                                    && xRatio>0 && yRatio > 0)
+                                {
+                                    x = (int)Math.Round(x * xRatio);
+                                    y = (int)Math.Round(y * yRatio);
+                                }
                                 if (!manipulate)
                                     MouseHook.WinAPI.SendMouseEx(targetWindows, mouseKey, x, y);
                                 else
@@ -1212,11 +1295,10 @@ namespace Autoquit
         }
         internal void ManipulateMouse(IntPtr hWnd, MouseKey mouseKey, int x, int y)
         {
-            Rect rct = new Rect();
-            if (WinAPI.GetWindowRect(hWnd, ref rct))
+            if (WinAPI.PointToScreen(hWnd,ref x,ref y))
             {
-                double rx = (x + rct.Left) * 65535 / (Screen.PrimaryScreen.Bounds.Width - 1);
-                double ry = (y + rct.Top) * 65535 / (Screen.PrimaryScreen.Bounds.Height - 1);
+                double rx = (x) * 65535 / (Screen.PrimaryScreen.Bounds.Width - 1);
+                double ry = (y) * 65535 / (Screen.PrimaryScreen.Bounds.Height - 1);
                 InputSender.Mouse.MoveMouseToPositionOnVirtualDesktop(rx,ry);
                 switch (mouseKey)
                 {
@@ -1356,6 +1438,28 @@ namespace Autoquit
             form.ShowDialog();
             SharedProperty.ToggleHotkey(this);
             form.Dispose();
+        }
+
+        private void ChkMousecoord_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkMousecoord.Checked)
+            {
+                try
+                {
+                    if (listProcess.SelectedItem != null)
+                    {
+                        var process = Process.GetProcessById((int)((DropDownItem)listProcess.SelectedItem).Id);
+                        MouseCoordIndicator.Show(process.MainWindowHandle);
+                    }
+                    else
+                        MouseCoordIndicator.Show(IntPtr.Zero);
+                }
+                catch (Exception)
+                {
+                    MouseCoordIndicator.Show(IntPtr.Zero);
+                }
+            }
+            else MouseCoordIndicator.Hide();
         }
     }
 }

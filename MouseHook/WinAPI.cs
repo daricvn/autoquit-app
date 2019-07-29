@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static MouseHook.MouseHook;
 
 namespace MouseHook
 {
@@ -29,6 +30,8 @@ namespace MouseHook
 
         [DllImport("user32.dll")]
         public static extern bool GetWindowRect(IntPtr hwnd, ref Rect rectangle);
+        [DllImport("user32.dll")]
+        public static extern bool GetClientRect(IntPtr hWnd, out Rect lpRect);
 
         public static void SendKeyboard(IntPtr windows, KeyType type, Keys key)
         {
@@ -84,16 +87,21 @@ namespace MouseHook
                     MakeLParam(x , y));
             }
         }
-        public static string RetrieveCoord(IntPtr windows, int x,int y)
+        public static string RetrieveCoord(IntPtr windows)
         {
-            Rect rct = new Rect();
-            if (!GetWindowRect(windows, ref rct))
-            {
-                return "";
-            }
-            var offX = x - rct.Left;
-            var offY = y - rct.Top;
-            return string.Format("{0}:{1}", offX, offY);
+            POINT point = GetCursorPosition();
+            MouseHook.ScreenToClient(windows, ref point);
+            return string.Format("{0}:{1}", point.x, point.y);
+        }
+        public static bool PointToScreen(IntPtr windows, ref int x, ref int y)
+        {
+            POINT p = new POINT();
+            p.x = x;
+            p.y = y;
+            var result=MouseHook.ClientToScreen(windows, ref p);
+            x = p.x;
+            y = p.y;
+            return result;
         }
         public static void SendMouse(IntPtr windows, MouseKey type, int x, int y)
         {

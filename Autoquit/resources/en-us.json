@@ -39,6 +39,7 @@
   "exit": "Exit",
   "settings": "Settings",
   "deep_scan": "Deep scan",
+  "view_mousecoord": "Display mouse coordinate",
   "msg_deepscan": "Scan all running processes, even system processes.",
   "playback_option": "Playback Options",
   "loop_unlimited": "Unlimited loop",
@@ -57,6 +58,7 @@
   "new_pass": "New password",
   "repeat_pass": "Repeat password",
   "clear_pass": "Clear password",
+  "respective_resolution": "Respective Resolution",
 
   "msg_pressanykey": "Press any key to set",
   "contact": "Contact",
@@ -119,6 +121,7 @@
   "msg_limit_reached": "Script sequence has reached limit.",
   "msg_corrupted_file": "This script file is corrupted.",
   "msg_script_isplaying": "The Autoquit is playing scripts, are you sure want to terminate and exit?",
+  "msg_incompatible_app": "Incompatible application. If you continue, respective resolution will be disabled.",
   "index": "Index",
   "eventtype": "Type",
   "keyname": "Key/Coord",

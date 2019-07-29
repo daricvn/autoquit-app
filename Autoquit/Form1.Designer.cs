@@ -31,7 +31,7 @@ namespace Autoquit
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btnToFront = new System.Windows.Forms.Button();
             this.listScanCooldown = new System.Windows.Forms.Timer(this.components);
@@ -76,6 +76,8 @@ namespace Autoquit
             this.ttGeneric = new System.Windows.Forms.ToolTip(this.components);
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.btnLock = new System.Windows.Forms.Button();
+            this.chkResolution = new System.Windows.Forms.CheckBox();
+            this.chkMousecoord = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.scriptGrid)).BeginInit();
             this.gbPlaybackOption.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtTimeCount)).BeginInit();
@@ -89,9 +91,9 @@ namespace Autoquit
             this.btnToFront.Enabled = false;
             this.btnToFront.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnToFront.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnToFront.Location = new System.Drawing.Point(630, 12);
+            this.btnToFront.Location = new System.Drawing.Point(617, 12);
             this.btnToFront.Name = "btnToFront";
-            this.btnToFront.Size = new System.Drawing.Size(146, 27);
+            this.btnToFront.Size = new System.Drawing.Size(159, 27);
             this.btnToFront.TabIndex = 2;
             this.btnToFront.Text = "@bring_to_front";
             this.btnToFront.UseVisualStyleBackColor = false;
@@ -109,7 +111,7 @@ namespace Autoquit
             this.btnScan.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnScan.Location = new System.Drawing.Point(480, 12);
             this.btnScan.Name = "btnScan";
-            this.btnScan.Size = new System.Drawing.Size(144, 27);
+            this.btnScan.Size = new System.Drawing.Size(131, 27);
             this.btnScan.TabIndex = 5;
             this.btnScan.Text = "@scan";
             this.btnScan.UseVisualStyleBackColor = false;
@@ -125,8 +127,8 @@ namespace Autoquit
             this.scriptGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.scriptGrid.Location = new System.Drawing.Point(12, 73);
             this.scriptGrid.Name = "scriptGrid";
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.scriptGrid.RowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.scriptGrid.RowsDefaultCellStyle = dataGridViewCellStyle3;
             this.scriptGrid.Size = new System.Drawing.Size(441, 380);
             this.scriptGrid.TabIndex = 6;
             this.scriptGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ScriptGrid_CellContentClick);
@@ -137,7 +139,7 @@ namespace Autoquit
             this.btnExit.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExit.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExit.Location = new System.Drawing.Point(641, 477);
+            this.btnExit.Location = new System.Drawing.Point(641, 508);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(135, 32);
             this.btnExit.TabIndex = 9;
@@ -150,7 +152,7 @@ namespace Autoquit
             this.btnSettings.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSettings.Location = new System.Drawing.Point(641, 439);
+            this.btnSettings.Location = new System.Drawing.Point(641, 470);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(135, 32);
             this.btnSettings.TabIndex = 10;
@@ -160,7 +162,7 @@ namespace Autoquit
             // 
             // txtFilePath
             // 
-            this.txtFilePath.Location = new System.Drawing.Point(12, 503);
+            this.txtFilePath.Location = new System.Drawing.Point(12, 540);
             this.txtFilePath.Name = "txtFilePath";
             this.txtFilePath.ReadOnly = true;
             this.txtFilePath.Size = new System.Drawing.Size(319, 20);
@@ -169,7 +171,7 @@ namespace Autoquit
             // 
             // btnOpen
             // 
-            this.btnOpen.Location = new System.Drawing.Point(337, 501);
+            this.btnOpen.Location = new System.Drawing.Point(337, 538);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(116, 23);
             this.btnOpen.TabIndex = 14;
@@ -181,7 +183,7 @@ namespace Autoquit
             // 
             this.chkDeepScan.Location = new System.Drawing.Point(480, 45);
             this.chkDeepScan.Name = "chkDeepScan";
-            this.chkDeepScan.Size = new System.Drawing.Size(160, 26);
+            this.chkDeepScan.Size = new System.Drawing.Size(160, 22);
             this.chkDeepScan.TabIndex = 18;
             this.chkDeepScan.Text = "@deep_scan";
             this.chkDeepScan.UseVisualStyleBackColor = true;
@@ -189,7 +191,7 @@ namespace Autoquit
             // 
             // scanProgress
             // 
-            this.scanProgress.Location = new System.Drawing.Point(-1, 536);
+            this.scanProgress.Location = new System.Drawing.Point(-1, 573);
             this.scanProgress.Name = "scanProgress";
             this.scanProgress.Size = new System.Drawing.Size(799, 10);
             this.scanProgress.TabIndex = 19;
@@ -359,7 +361,7 @@ namespace Autoquit
             // versionLabel
             // 
             this.versionLabel.ImageAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.versionLabel.Location = new System.Drawing.Point(546, 512);
+            this.versionLabel.Location = new System.Drawing.Point(546, 549);
             this.versionLabel.Name = "versionLabel";
             this.versionLabel.Size = new System.Drawing.Size(230, 21);
             this.versionLabel.TabIndex = 26;
@@ -414,7 +416,7 @@ namespace Autoquit
             this.btnPlay.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPlay.Image = global::Autoquit.Properties.Resources.play;
             this.btnPlay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPlay.Location = new System.Drawing.Point(605, 363);
+            this.btnPlay.Location = new System.Drawing.Point(605, 394);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.btnPlay.Size = new System.Drawing.Size(171, 32);
@@ -514,7 +516,7 @@ namespace Autoquit
             this.btnRecord.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRecord.Image = ((System.Drawing.Image)(resources.GetObject("btnRecord.Image")));
             this.btnRecord.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRecord.Location = new System.Drawing.Point(605, 401);
+            this.btnRecord.Location = new System.Drawing.Point(605, 432);
             this.btnRecord.Name = "btnRecord";
             this.btnRecord.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.btnRecord.Size = new System.Drawing.Size(171, 32);
@@ -590,11 +592,35 @@ namespace Autoquit
             this.btnLock.UseVisualStyleBackColor = false;
             this.btnLock.Click += new System.EventHandler(this.BtnLock_Click);
             // 
+            // chkResolution
+            // 
+            this.chkResolution.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkResolution.Enabled = false;
+            this.chkResolution.Location = new System.Drawing.Point(605, 370);
+            this.chkResolution.Name = "chkResolution";
+            this.chkResolution.Size = new System.Drawing.Size(171, 18);
+            this.chkResolution.TabIndex = 31;
+            this.chkResolution.Text = "@respective_resolution";
+            this.chkResolution.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkResolution.UseVisualStyleBackColor = true;
+            // 
+            // chkMousecoord
+            // 
+            this.chkMousecoord.Location = new System.Drawing.Point(480, 64);
+            this.chkMousecoord.Name = "chkMousecoord";
+            this.chkMousecoord.Size = new System.Drawing.Size(160, 22);
+            this.chkMousecoord.TabIndex = 32;
+            this.chkMousecoord.Text = "@view_mousecoord";
+            this.chkMousecoord.UseVisualStyleBackColor = true;
+            this.chkMousecoord.CheckedChanged += new System.EventHandler(this.ChkMousecoord_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(792, 545);
+            this.ClientSize = new System.Drawing.Size(795, 578);
+            this.Controls.Add(this.chkMousecoord);
+            this.Controls.Add(this.chkResolution);
             this.Controls.Add(this.btnLock);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label2);
@@ -688,6 +714,8 @@ namespace Autoquit
         private System.Windows.Forms.ToolTip ttGeneric;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Button btnLock;
+        private System.Windows.Forms.CheckBox chkResolution;
+        private System.Windows.Forms.CheckBox chkMousecoord;
     }
 }
 

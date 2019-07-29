@@ -39,6 +39,7 @@
   "exit": "Thoát",
   "settings": "Tùy chỉnh",
   "deep_scan": "Quét sâu hệ thống",
+  "view_mousecoord": "Hiển thị tọa độ",
   "msg_deepscan": "Quét toàn bộ tiến trình, kể cả tiến trình hệ thống.",
   "playback_option": "Tùy chọn phát lại",
   "loop_unlimited": "Lặp vô hạn",
@@ -57,6 +58,7 @@
   "new_pass": "Mật khẩu mới",
   "repeat_pass": "Nhập lại mật khẩu",
   "clear_pass": "Xóa mật khẩu",
+  "respective_resolution": "Bảo toàn độ phân giải",
 
   "msg_pressanykey": "Press any key to set",
   "contact": "Liên hệ",
@@ -113,6 +115,7 @@
   "msg_invalid_agrument": "Tham số không hợp lệ.",
   "msg_invalid_coord": "Tọa độ không phù hợp.",
   "msg_incompatible_script": "Không tìm thấy kịch bản phù hợp.",
+  "msg_incompatible_app": "Chương trình không tương thích, nếu bạn tiếp tục, bảo toàn phân giải sẽ bị tắt.",
   "msg_language_changed": "Ngôn ngữ chương trình đã bị thay đổi. Vui lòng khởi động lại để áp dụng.",
   "msg_saved": "Lưu thành công",
   "msg_limit_reached": "Quy trình kịch bản đã đạt giới hạn.",

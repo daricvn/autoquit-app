@@ -36,6 +36,7 @@ namespace MouseHook
             }
         }
 
+
         private delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
 
         private static IntPtr HookCallback(
@@ -113,7 +114,7 @@ namespace MouseHook
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct POINT
+        public struct POINT
         {
             public int x;
             public int y;
@@ -129,6 +130,9 @@ namespace MouseHook
             public IntPtr dwExtraInfo;
         }
 
+        [DllImport("user32.dll")]
+        public static extern bool GetCursorPos(out POINT lpPoint);
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook,
           LowLevelMouseProc lpfn, IntPtr hMod, uint dwThreadId);
@@ -143,5 +147,16 @@ namespace MouseHook
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string lpModuleName);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
+
+        public static POINT GetCursorPosition()
+        {
+            GetCursorPos(out POINT cursor);
+            return cursor;
+        }
+
     }
 }
